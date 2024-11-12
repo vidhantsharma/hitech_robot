@@ -1,8 +1,0 @@
-prefix=/home/vidhant/hitech_robot_assignment/hitech_robot_ws/devel
-
-Name: hitech_robot_description
-Description: Description of hitech_robot_description
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
