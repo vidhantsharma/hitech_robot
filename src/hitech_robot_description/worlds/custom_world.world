@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<sdf version="1.6">
+  <world name="custom_world">
+    <include>
+      <uri>model://ground_plane</uri> <!-- Adds a ground plane -->
+    </include>
+    
+    <include>
+      <uri>model://sun</uri> <!-- Adds lighting to the world -->
+    </include>
+
+    <!-- Simple Box Object -->
+    <model name="box_1">
+      <pose>1 1 0.5 0 0 0</pose>
+      <link name="box_link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0 0 1</ambient> <!-- Red color -->
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Simple Cylinder Object -->
+    <model name="cylinder_1">
+      <pose>-1 -1 0.5 0 0 0</pose>
+      <link name="cylinder_link">
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0 0 0.5 1</ambient> <!-- Blue color -->
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

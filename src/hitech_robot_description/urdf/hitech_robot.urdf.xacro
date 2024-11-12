@@ -139,31 +139,109 @@
     <origin xyz="0 0 0"/> <!-- Camera link mounted on the camera mount -->
   </joint>
 
-  <!-- Depth Camera Sensor (Stereo) -->
+  <!-- Depth Camera Sensor -->
   <gazebo reference="camera_link">
-    <sensor name="stereo_camera" type="stereo">
-      <pose>0 0 0 0 0 0</pose>
+    <sensor name="camera_link_depth_camera" type="depth">
+      <update_rate>20</update_rate>
       <camera>
-        <horizontal_fov>1.396</horizontal_fov>
+        <horizontal_fov>1.047198</horizontal_fov> <!-- 60 degrees FOV -->
         <image>
           <width>640</width>
           <height>480</height>
           <format>R8G8B8</format>
         </image>
-        <depth>
-          <image>
-            <width>640</width>
-            <height>480</height>
-            <format>32FC1</format>
-          </image>
-        </depth>
         <clip>
-          <near>0.1</near>
-          <far>100.0</far>
+          <near>0.05</near>
+          <far>3</far>
         </clip>
       </camera>
+      
+      <!-- Depth camera plugin for processing -->
+      <plugin name="camera_link_depth_controller" filename="libgazebo_ros_openni_kinect.so">
+        <baseline>0.2</baseline> <!-- Baseline for stereo camera (if used) -->
+        <alwaysOn>true</alwaysOn>
+        <updateRate>1.0</updateRate>
+        <cameraName>camera_link_ir</cameraName>
+        <imageTopicName>/camera_link/color/image_raw</imageTopicName>
+        <cameraInfoTopicName>/camera_link/color/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/camera_link/depth/image_raw</depthImageTopicName>
+        <depthImageInfoTopicName>/camera_link/depth/camera_info</depthImageInfoTopicName>
+        <pointCloudTopicName>/camera_link/depth/points</pointCloudTopicName>
+        <frameName>camera_link_frame</frameName>
+        <pointCloudCutoff>0.5</pointCloudCutoff> <!-- Minimum distance for point cloud -->
+        <pointCloudCutoffMax>3.0</pointCloudCutoffMax> <!-- Max distance for point cloud -->
+        <distortionK1>0.00000001</distortionK1>
+        <distortionK2>0.00000001</distortionK2>
+        <distortionK3>0.00000001</distortionK3>
+        <distortionT1>0.00000001</distortionT1>
+        <distortionT2>0.00000001</distortionT2>
+        <CxPrime>0</CxPrime>
+        <Cx>0</Cx>
+        <Cy>0</Cy>
+        <focalLength>0</focalLength>
+        <hackBaseline>0</hackBaseline>
+      </plugin>
     </sensor>
   </gazebo>
 
-</robot>
   
+
+  <!-- Front Caster Wheel -->
+  <link name="front_caster_wheel_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Rear Caster Wheel -->
+  <link name="rear_caster_wheel_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint: Base to Front Caster Wheel -->
+  <joint name="front_caster_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_caster_wheel_link"/>
+    <origin xyz="0.225 0 -0.075"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Joint: Base to Rear Caster Wheel -->
+  <joint name="rear_caster_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_caster_wheel_link"/>
+    <origin xyz="-0.225 0 -0.075"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+</robot>

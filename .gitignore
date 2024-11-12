@@ -1,0 +1,6 @@
+# ignore build
+build/
+
+# ignore devel
+devel/
+

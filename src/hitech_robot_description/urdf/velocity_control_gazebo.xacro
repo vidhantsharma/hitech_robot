@@ -2,7 +2,7 @@
 
 <robot name="bumperbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- <transmission name="right_wheel_transmission">
+  <transmission name="right_wheel_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="right_wheel_joint" >
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
@@ -21,8 +21,8 @@
     <actuator name="left_wheel_motor" >
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
       <mechanicalReduction>1.0</mechanicalReduction>
-    </actuator> -->
-  <!-- </transmission> -->
+    </actuator>
+  </transmission>
 
   <gazebo reference="left_wheel_link">
     <mu1>1000000000000000.0</mu1>
@@ -44,12 +44,40 @@
     <fdir1>1 0 0</fdir1>
   </gazebo>
 
+  <gazebo reference="rear_caster_wheel_link">
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+  </gazebo>
+  
+  <gazebo reference="front_caster_wheel_link">
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+  </gazebo>
+
   <!-- ROS Control -->
-  <!-- <gazebo>
+  <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
       <legacyModeNS>true</legacyModeNS>
     </plugin>
-  </gazebo> -->
+    <!-- <plugin name="stereo_camera_plugin" filename="libgazebo_ros_camera.so">
+      <camera_name>stereo_camera</camera_name>
+      <topicName>/stereo_camera/image_raw</topicName>
+      <updateRate>30.0</updateRate>
+    </plugin> -->
+    <!-- <plugin name="mono_camera_plugin" filename="libgazebo_ros_camera.so">
+      <camera_name>mono_camera</camera_name>
+      <topicName>/mono_camera/image_raw</topicName>
+      <updateRate>30.0</updateRate>
+    </plugin> -->
+  </gazebo>
   
 </robot>
