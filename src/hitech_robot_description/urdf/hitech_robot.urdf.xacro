@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+
+<robot name="hitech_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find hitech_robot_description)/urdf/velocity_control_gazebo.xacro"/>
+
+  <link name="base_footprint"/>
+
+  <!-- Robot Base Link (Root Link) -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+          <box size="0.5 0.5 0.1"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/> <!-- Blue Color -->
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+          <box size="0.5 0.5 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Left Wheel -->
+  <link name="left_wheel">
+    <inertial>
+      <mass value="0.1" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/> <!-- Black Color -->
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Right Wheel -->
+  <link name="right_wheel">
+    <inertial>
+      <mass value="0.1" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/> <!-- Black Color -->
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Camera Mount -->
+  <link name="camera_mount">
+    <inertial>
+      <mass value="0.1" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.05"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="gray">
+        <color rgba="0.5 0.5 0.5 1"/> <!-- Gray Color -->
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.1 0.1 0.05"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <!-- Camera Link -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.05 0.1 0.1"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.8 0.8 0.8 1"/> <!-- Light Gray Color -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joint: Base to Left Wheel -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="0.0 0.275 -0.05" rpy="1.57 0 0"/> <!-- Positioning and rotating left wheel along the y-axis -->
+    <axis xyz="0 0 1"/> <!-- Rotate around the z-axis -->
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <pid p="100" i="0.1" d="1.0" />
+  </joint>
+
+  <!-- Joint: Base to Right Wheel -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0.0 -0.275 -0.05" rpy="1.57 0 0"/> <!-- Positioning and rotating right wheel along the y-axis -->
+    <axis xyz="0 0 1"/> <!-- Rotate around the z-axis -->
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <pid p="100" i="0.1" d="1.0" />
+  </joint>
+
+  <!-- Joint: Base to Camera Mount (Fixed) -->
+  <joint name="camera_mount_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_mount"/>
+    <origin xyz="0 0 0.075"/> <!-- Positioning the camera mount above the base -->
+  </joint>
+
+  <!-- Camera Link to Camera Mount -->
+  <joint name="camera_link_joint" type="fixed">
+    <parent link="camera_mount"/>
+    <child link="camera_link"/>
+    <origin xyz="0 0 0"/> <!-- Camera link mounted on the camera mount -->
+  </joint>
+
+  <!-- Depth Camera Sensor (Stereo) -->
+  <gazebo reference="camera_link">
+    <sensor name="stereo_camera" type="stereo">
+      <pose>0 0 0 0 0 0</pose>
+      <camera>
+        <horizontal_fov>1.396</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <depth>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>32FC1</format>
+          </image>
+        </depth>
+        <clip>
+          <near>0.1</near>
+          <far>100.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+</robot>
+  

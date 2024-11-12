@@ -1,0 +1,23 @@
+<launch>
+    <arg name="model" default="$(find hitech_robot_description)/urdf/hitech_robot.urdf.xacro"/>
+    <arg name="world" default="empty_world"/>
+    
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+  
+    <!-- Launch Gazebo with world and other arguments -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="paused"        value="false"/>  <!-- Ensure the world isn't paused -->
+      <arg name="use_sim_time"  value="true"/>
+      <arg name="gui"           value="true"/>
+      <arg name="headless"      value="false"/>
+      <arg name="debug"         value="false"/>
+      <arg name="world_name"    value="$(arg world)"/>
+    </include>
+  
+    <!-- Node to spawn the robot model -->
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
+          args="-unpause -urdf -model robot -param robot_description"
+          output="screen" respawn="false"/>
+          
+  </launch>
+  

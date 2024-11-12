@@ -1,0 +1,2 @@
+hitech_robot_description
+-DCATKIN_DEVEL_PREFIX=/home/vidhant/hitech_robot_assignment/hitech_robot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/vidhant/hitech_robot_assignment/hitech_robot_ws/install -G Unix Makefiles
