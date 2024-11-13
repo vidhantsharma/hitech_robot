@@ -1,3 +1,30 @@
+# Differential Drive Controller
+diff_drive_controller:
+  type: "diff_drive_controller/DiffDriveController"
+  left_wheel: left_wheel_joint
+  right_wheel: right_wheel_joint
+  publish_rate: 50
+  wheel_separation: 0.34               # Distance between wheels; adjust as needed
+  wheel_radius: 0.05                   # Radius of wheels; adjust as needed
+  cmd_vel_topic: "/cmd_vel"            # Explicitly setting the command topic
+
+  # Velocity limits
+  linear:
+    x:
+      has_velocity_limits: true
+      max_velocity: 0.5               # Match with teleop speed
+      min_velocity: -0.5
+  angular:
+    z:
+      has_velocity_limits: true
+      max_velocity: 1.0
+      min_velocity: -1.0
+
+# Joint State Controller
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+
+# Left and Right Wheel Controllers
 left_wheel_controller:
   type: velocity_controllers/JointVelocityController
   joint: left_wheel_joint

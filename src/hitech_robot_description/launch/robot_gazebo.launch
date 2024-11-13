@@ -18,5 +18,8 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
           args="-unpause -urdf -model robot -param robot_description"
           output="screen" respawn="false"/>
+
+    <!-- Static Transform Publisher between world and odom frames -->
+    <node pkg="tf" type="static_transform_publisher" name="static_world_transform" args="0 0 0 0 0 0 1 /world /odom 100" />
           
 </launch>

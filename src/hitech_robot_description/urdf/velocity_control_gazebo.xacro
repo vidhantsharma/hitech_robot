@@ -68,16 +68,6 @@
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
       <legacyModeNS>true</legacyModeNS>
     </plugin>
-    <!-- <plugin name="stereo_camera_plugin" filename="libgazebo_ros_camera.so">
-      <camera_name>stereo_camera</camera_name>
-      <topicName>/stereo_camera/image_raw</topicName>
-      <updateRate>30.0</updateRate>
-    </plugin> -->
-    <!-- <plugin name="mono_camera_plugin" filename="libgazebo_ros_camera.so">
-      <camera_name>mono_camera</camera_name>
-      <topicName>/mono_camera/image_raw</topicName>
-      <updateRate>30.0</updateRate>
-    </plugin> -->
   </gazebo>
   
 </robot>

@@ -4,3 +4,5 @@ build/
 # ignore devel
 devel/
 
+# Ignore Python cache directories
+__pycache__/

@@ -1,0 +1,8 @@
+<launch>
+    <!-- Keyboard Teleop Node -->
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen">
+        <param name="speed" value="-0.5"/>           <!-- Set speed to match YAML settings -->
+        <param name="turn" value="-1.0"/>            <!-- Set turn rate to match YAML settings -->
+        <remap from="cmd_vel" to="hitech_robot_controller/cmd_vel"/>
+    </node>
+</launch>

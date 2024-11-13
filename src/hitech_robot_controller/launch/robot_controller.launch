@@ -1,14 +1,15 @@
 <launch>
+      <rosparam file="$(find joint_state_controller)/joint_state_controller.yaml" command="load"/>
 
-    <rosparam file="$(find joint_state_controller)/joint_state_controller.yaml" command="load"/>
-    <rosparam file="$(find hitech_robot_controller)/config/hitech_robot_controller.yaml" command="load" />
+      <!-- Convert joint states to TF transforms for rviz, etc -->
+      <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+            respawn="false" output="screen"/>
 
-    <!-- Convert joint states to TF transforms for rviz, etc -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
-          respawn="false" output="screen"/>
+      <!-- Use the diff_drive_controller -->
+      <rosparam file="$(find hitech_robot_controller)/config/diff_drive_controller.yaml" command="load"/>
 
-    <!-- Launch the controller manager with the wheel controller -->
-    <node name="controller_manager" pkg="controller_manager" type="spawner"
-          respawn="false" output="screen" args="joint_state_controller left_wheel_controller right_wheel_controller" />
-   
+      <!-- Launch the controller manager with the wheel controller -->
+      <node name="controller_manager" pkg="controller_manager" type="spawner"
+            respawn="false" output="screen" args="joint_state_controller hitech_robot_controller" />
+     
 </launch>
