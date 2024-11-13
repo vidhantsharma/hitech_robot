@@ -4,15 +4,15 @@ diff_drive_controller:
   left_wheel: left_wheel_joint
   right_wheel: right_wheel_joint
   publish_rate: 50
-  wheel_separation: 0.34               # Distance between wheels; adjust as needed
-  wheel_radius: 0.05                   # Radius of wheels; adjust as needed
-  cmd_vel_topic: "/cmd_vel"            # Explicitly setting the command topic
+  wheel_separation: 0.5              
+  wheel_radius: 0.05                   
+  cmd_vel_topic: "/cmd_vel"            
 
   # Velocity limits
   linear:
     x:
       has_velocity_limits: true
-      max_velocity: 0.5               # Match with teleop speed
+      max_velocity: 0.5              
       min_velocity: -0.5
   angular:
     z:

@@ -144,6 +144,7 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 catkin_install_python(PROGRAMS
   nodes/object_detection_node.py
+  nodes/object_follow_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

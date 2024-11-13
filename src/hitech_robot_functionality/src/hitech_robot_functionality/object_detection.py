@@ -16,6 +16,8 @@ class objectDetection(object):
 
         # Initialize TF listener to get transformations
         self.listener = tf.TransformListener()
+        
+        self.relative_position = None
 
     def camera_info_callback(self, msg):
         """ Callback to store camera info """
@@ -61,22 +63,23 @@ class objectDetection(object):
                 # If depth information is available
                 if depth is not None:
                     # Convert pixel coordinates to camera frame
-                    relative_position = self.pixel_to_camera_frame(center_x, center_y, depth)
+                    self.relative_position = self.pixel_to_camera_frame(center_x, center_y, depth)
 
                     # Get the relative position in world frame using tf
-                    object_position_in_world = self.get_position_in_world(relative_position)
+                    object_position_in_world = self.get_position_in_world(self.relative_position)
 
                     # Display object position in world frame
                     rospy.loginfo(f"Object position in world frame: {object_position_in_world}")
+                else:
+                    self.relative_position = None
 
         # Display the result
-        cv2.imshow("Detected Objects", frame)
-        cv2.waitKey(1)
+        # cv2.imshow("Detected Objects", frame)
+        # cv2.waitKey(1)
 
     def get_depth(self, x, y):
         """ Get depth from the depth image at (x, y) coordinates """
         depth_image = rospy.wait_for_message("/camera_link/depth/image_raw", Image)
-        rospy.loginfo(f"Depth image encoding: {depth_image.encoding}")
         depth_frame = self.bridge.imgmsg_to_cv2(depth_image, desired_encoding="passthrough")
         return depth_frame[y, x] if depth_image else None
 
