@@ -6,3 +6,6 @@ devel/
 
 # Ignore Python cache directories
 __pycache__/
+
+# Ignore .vscode files
+.vscode/

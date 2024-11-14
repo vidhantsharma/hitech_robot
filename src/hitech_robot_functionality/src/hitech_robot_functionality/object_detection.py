@@ -64,6 +64,8 @@ class objectDetection(object):
                 if depth is not None:
                     # Convert pixel coordinates to camera frame
                     self.relative_position = self.pixel_to_camera_frame(center_x, center_y, depth)
+                    
+                    rospy.loginfo(f"Relative position: {self.relative_position}")
 
                     # Get the relative position in world frame using tf
                     object_position_in_world = self.get_position_in_world(self.relative_position)
