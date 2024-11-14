@@ -19,6 +19,11 @@ RUN apt-get update && \
     gazebo11 \
     libgl1-mesa-glx \
     libx11-dev \
+    ros-noetic-ros-controllers \
+    ros-noetic-gazebo-ros-control \
+    ros-noetic-joint-state-publisher-gui \
+    ros-noetic-teleop-twist-keyboard \
+    ros-noetic-robot-state-publisher \
     && rm -rf /var/lib/apt/lists/*
 
 # Initialize rosdep
