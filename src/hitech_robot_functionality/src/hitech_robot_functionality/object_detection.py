@@ -11,6 +11,15 @@ class objectDetection(object):
         # Initialize the bridge to convert ROS messages to OpenCV
         self.bridge = CvBridge()
 
+        # Load YOLO model
+        self.net = cv2.dnn.readNetFromDarknet("src/hitech_robot_functionality/config/yolov3-tiny.cfg", "src/hitech_robot_functionality/config/yolov3-tiny.weights")
+        self.layer_names = self.net.getLayerNames()
+        self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+
+        # Load COCO class labels
+        with open("src/hitech_robot_functionality/data/coco.names", "r") as f:
+            self.classes = f.read().strip().split("\n")
+
         # Camera calibration parameters
         self.camera_info = None
 
@@ -32,48 +41,51 @@ class objectDetection(object):
         # Convert ROS Image message to OpenCV format
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
 
-        # Convert to HSV color space
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-        # Define range of red color in HSV space
-        lower_red = np.array([0, 120, 70])
-        upper_red = np.array([10, 255, 255])
-
-        # Threshold the image to get only red colors
-        mask = cv2.inRange(hsv, lower_red, upper_red)
-
-        # Bitwise-AND mask and original image
-        result = cv2.bitwise_and(frame, frame, mask=mask)
-
-        # Find contours of the detected objects
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # Prepare the image for YOLO
+        height, width, _ = frame.shape
+        blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+        self.net.setInput(blob)
         
-        for contour in contours:
-            if cv2.contourArea(contour) > 100:  # Ignore small contours
-                x, y, w, h = cv2.boundingRect(contour)
-                center_x = x + w // 2
-                center_y = y + h // 2
+        # Perform forward pass to get detections
+        detections = self.net.forward(self.output_layers)
 
-                # Draw a circle at the center of the object
-                cv2.circle(frame, (center_x, center_y), 5, (0, 255, 0), -1)
+        for detection in detections:
+            for obj in detection:
+                scores = obj[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                
+                # Filter detections by confidence threshold
+                if confidence > 0.5:
+                    # Get bounding box coordinates
+                    center_x = int(obj[0] * width)
+                    center_y = int(obj[1] * height)
+                    w = int(obj[2] * width)
+                    h = int(obj[3] * height)
+                    x = int(center_x - w / 2)
+                    y = int(center_y - h / 2)
 
-                # Get depth information (if camera is a depth camera)
-                depth = self.get_depth(center_x, center_y)
+                    # Draw bounding box and label
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    label = f"{self.classes[class_id]}: {confidence:.2f}"
+                    cv2.putText(frame, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-                # If depth information is available
-                if depth is not None:
-                    # Convert pixel coordinates to camera frame
-                    self.relative_position = self.pixel_to_camera_frame(center_x, center_y, depth)
-                    
-                    rospy.loginfo(f"Relative position: {self.relative_position}")
+                    # Get depth information
+                    depth = self.get_depth(center_x, center_y)
 
-                    # Get the relative position in world frame using tf
-                    object_position_in_world = self.get_position_in_world(self.relative_position)
+                    if depth is not None:
+                        # Convert pixel coordinates to camera frame
+                        self.relative_position = self.pixel_to_camera_frame(center_x, center_y, depth)
+                        
+                        rospy.loginfo(f"Relative position: {self.relative_position}")
 
-                    # Display object position in world frame
-                    rospy.loginfo(f"Object position in world frame: {object_position_in_world}")
-                else:
-                    self.relative_position = None
+                        # Get the relative position in world frame using tf
+                        object_position_in_world = self.get_position_in_world(self.relative_position)
+
+                        # Display object position in world frame
+                        rospy.loginfo(f"Object position in world frame: {object_position_in_world}")
+                    else:
+                        self.relative_position = None
 
         # Display the result
         # cv2.imshow("Detected Objects", frame)

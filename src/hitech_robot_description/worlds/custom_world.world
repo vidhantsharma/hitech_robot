@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<sdf version="1.6">
+<sdf version="1.5">
   <world name="custom_world">
     <include>
       <uri>model://ground_plane</uri> <!-- Adds a ground plane -->
@@ -10,31 +10,34 @@
       <uri>model://sun</uri> <!-- Adds lighting to the world -->
     </include>
 
-    <!-- Simple Cylinder Object -->
-    <model name="cylinder_1">
-      <pose>0 -3 0.5 0 0 0</pose>
-      <link name="cylinder_link">
+    <!-- Stop Sign Object -->
+    <model name="Stop Sign">
+      <pose>0 -2.5 0.5 0 0 3.14</pose> <!-- Ensure z matches expected height -->
+      <link name="link">
         <collision name="collision">
           <geometry>
-            <cylinder>
-              <radius>0.05</radius>
-              <length>0.3</length>
-            </cylinder>
+            <mesh>
+              <uri>file:///home/vidhant/hitech_robot_assignment/hitech_robot_ws/src/hitech_robot_description/meshes/stop_sign.dae</uri>
+              <scale>0.25 0.25 0.25</scale>
+            </mesh>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
-            <cylinder>
-              <radius>0.05</radius>
-              <length>0.3</length>
-            </cylinder>
+            <mesh>
+              <uri>file:///home/vidhant/hitech_robot_assignment/hitech_robot_ws/src/hitech_robot_description/meshes/stop_sign.dae</uri>
+              <scale>0.25 0.25 0.25</scale>
+            </mesh>
           </geometry>
           <material>
-            <ambient>1 0 0 1</ambient> <!-- Red color -->
+            <script>
+              <uri>file:///home/vidhant/hitech_robot_assignment/hitech_robot_ws/src/hitech_robot_description/materials/scripts</uri>
+              <uri>file:///home/vidhant/hitech_robot_assignment/hitech_robot_ws/src/hitech_robot_description/materials/textures</uri>
+              <name>StopSign/Diffuse</name>
+            </script>
           </material>
         </visual>
       </link>
     </model>
-
   </world>
 </sdf>
