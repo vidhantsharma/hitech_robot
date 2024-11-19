@@ -4,7 +4,7 @@ from sensor_msgs.msg import Image, CameraInfo
 from hitech_robot_functionality.object_follow import objectFollow
 
 
-class ObjectFollowNode:
+class objectFollowNode:
     def __init__(self):
         rospy.init_node('object_follower')
 
@@ -30,7 +30,7 @@ class ObjectFollowNode:
 
 if __name__ == '__main__':
     try:
-        node = ObjectFollowNode()
+        node = objectFollowNode()
         node.run()
     except rospy.ROSInterruptException:
         pass

@@ -15,7 +15,7 @@ def create_cylinder_marker():
 
     # Set the position of the cylinder (same pose as in your Gazebo model)
     marker.pose.position.x = 0
-    marker.pose.position.y = -3
+    marker.pose.position.y = -2.5
     marker.pose.position.z = 0
     marker.pose.orientation.w = 1.0
 

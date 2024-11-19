@@ -1,6 +1,5 @@
 import random
 from geometry_msgs.msg import Twist
-# from object_detection import objectDetection
 from .object_detection import objectDetection
 import rospy
 
@@ -32,7 +31,7 @@ class objectFollow:
                 self.stop_robot(cmd_pub)
             object_position_y = self.object_position[1].item()
             
-            rospy.loginfo(f"object position is : {object_position_y}")
+            rospy.loginfo(f"object lateral position is : {object_position_y}")
 
             twist.linear.x = -self.forward_speed
             twist.angular.z = self._kp * object_position_y
@@ -50,7 +49,6 @@ class objectFollow:
 
             # Start rotating (turn 360 degrees at a constant speed)
             twist.angular.z = self.turn_speed  # Rotate at a constant speed
-            # cmd_pub.publish(twist)
 
             # Rotate for 360 degrees (check if the object is detected)
             rotation_duration = 2 * 3.1416 / abs(self.turn_speed)  # Time to complete 360 degrees rotation
@@ -83,6 +81,8 @@ class objectFollow:
             if self.object_position is None:
                 rospy.loginfo("Object not found, moving randomly for 0.5 meters")
                 self.move_randomly(cmd_pub)
+            else:
+                self.move_towards_object(cmd_pub)
 
     def move_randomly(self, cmd_pub):
         """Move the robot in a random direction for 0.5 meters."""
@@ -92,7 +92,6 @@ class objectFollow:
         # Move 0.5 meters in a random direction
         random_direction = random.choice([1, -1])  # 1 or -1 for random direction
         twist.linear.x = random_direction * self.forward_speed  # Move forward in the chosen direction
-        # cmd_pub.publish(twist)
 
         # Periodically check if the object is detected during the movement
         rate = rospy.Rate(10)  # Check 10 times per second
@@ -123,6 +122,8 @@ class objectFollow:
         # After movement, rotate again if no object is found
         if self.object_position is None:
             self.search_for_object(cmd_pub)
+        else:
+            self.move_towards_object(cmd_pub)
             
     def stop_robot(self, cmd_pub):
         """Stop the robot and shut down the node."""
